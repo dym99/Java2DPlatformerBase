@@ -1,0 +1,75 @@
+package com.dym99.PlatformerBase;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.nio.ByteBuffer;
+
+public class Main implements Runnable{
+
+	public static final String GAME_NAME = "2DPLATFORMER";
+
+	private static final long NULL = 0;
+	
+	private Thread thread;
+	
+	private int displayWidth = 1280, displayHeight = 720;
+	
+	private long window;
+	
+	private boolean running;
+	
+	public static void main(String args[]) {
+		Main main = new Main();
+		main.start();
+	}
+	
+	public void start() {
+		running = true;
+		thread = new Thread(this, GAME_NAME);
+		thread.start();
+	}
+	
+	public void init() {
+		if (glfwInit() != GL_TRUE) {
+			System.err.println("ERROR: Unable to initialize GLFW");
+		}
+		
+		window = glfwCreateWindow(displayWidth, displayHeight, GAME_NAME, NULL, NULL);
+
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+		
+		if (window == NULL) {
+			System.err.println("ERROR: Unable to create window.");
+		}
+		
+		
+		ByteBuffer videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		
+		glfwMakeContextCurrent(window);
+		glfwShowWindow(window);
+	}
+	
+	public void logic() {
+		glfwPollEvents();
+	}
+	
+	public void draw() {
+		
+		glfwSwapBuffers(window);
+	}
+	
+	@Override
+	public void run() {
+		init();
+		while (running) {
+			logic();
+			draw();
+			
+			if (glfwWindowShouldClose(window) == GL_TRUE) {
+				running = false;
+			}
+		}
+	}
+
+}

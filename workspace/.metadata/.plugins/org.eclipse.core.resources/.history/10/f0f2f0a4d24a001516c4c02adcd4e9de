@@ -1,0 +1,40 @@
+package com.dym99.PlatformerBase;
+
+import static org.lwjgl.glfw.GLFW.*;
+
+public class Main implements Runnable{
+
+	public static final String GAME_NAME = "2DPLATFORMER";
+	
+	private Thread thread;
+	
+	private int displayWidth = 1280, displayHeight = 720;
+	
+	private long window;
+	
+	private boolean running;
+	
+	public static void main(String args[]) {
+		Main main = new Main();
+		main.start();
+	}
+	
+	public void start() {
+		running = true;
+		thread = new Thread(this, GAME_NAME);
+		thread.start();
+	}
+	
+	public void init() {
+		if (glfwInit != GL_TRUE) {
+			
+		}
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
