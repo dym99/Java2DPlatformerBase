@@ -1,0 +1,15 @@
+package com.dym99.PlatformerBase;
+
+import org.lwjgl.glfw.GLFWErrorCallback;
+
+public class Main {
+	
+	private static GLFWErrorCallback errorCallback;
+	private static long window;
+	
+	public static void main(String args[]) {
+		
+	}
+
+}
+	

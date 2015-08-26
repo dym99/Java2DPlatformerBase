@@ -1,0 +1,20 @@
+package com.dym99.PlatformerBase;
+
+import org.lwjgl.glfw.Callbacks;
+import org.lwjgl.glfw.GLFWErrorCallback;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL45.*;
+
+public class Main {
+	
+	private static GLFWErrorCallback errorCallback;
+	private static long window;
+	
+	public static void main(String args[]) {
+		errorCallback = Callbacks.errorCallbackPrint(System.err);
+		glfwSetErrorCallback(errorCallback);
+	}
+
+}
+	

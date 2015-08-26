@@ -1,84 +1,49 @@
 package com.dym99.PlatformerBase;
 
+import org.lwjgl.glfw.Callbacks;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GLContext;
+import org.lwjgl.system.MemoryUtil;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import java.nio.ByteBuffer;
-
-import org.lwjgl.opengl.GLContext;
-
-public class Main implements Runnable{
-
-	public static final String GAME_NAME = "2DPLATFORMER";
-
-	private static final long NULL = 0;
+public class Main {
 	
-	private Thread thread;
-	
-	private int displayWidth = 1280, displayHeight = 720;
-	
-	private long window;
-	
-	private boolean running;
+	private static GLFWErrorCallback errorCallback;
+	private static long window;
 	
 	public static void main(String args[]) {
-		Main main = new Main();
-		main.start();
-	}
-	
-	public void start() {
-		running = true;
-		thread = new Thread(this, GAME_NAME);
-		thread.start();
-	}
-	
-	public void init() {
-		if (glfwInit() != GL_FALSE) {
-			System.err.println("ERROR: Unable to initialize GLFW");
+		errorCallback = Callbacks.errorCallbackPrint(System.err);
+		glfwSetErrorCallback(errorCallback);
+		
+		if (glfwInit() == GL_FALSE) {
+			throw new IllegalStateException("GLFW INIT FAILED!");
 		}
 		
-		window = glfwCreateWindow(displayWidth, displayHeight, GAME_NAME, NULL, NULL);
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 		
-		if (window == NULL) {
-			System.err.println("ERROR: Unable to create window.");
+		window = glfwCreateWindow(1280, 720, "Game", MemoryUtil.NULL, MemoryUtil.NULL);
+
+		if (window == MemoryUtil.NULL) {
+			throw new IllegalStateException("WINDOW CREATION FAILED!");
 		}
-		
-		
-		ByteBuffer videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		
 		glfwMakeContextCurrent(window);
+		glfwSwapInterval(1);
 		glfwShowWindow(window);
 		
 		GLContext.createFromCurrent();
 		
-		glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
-		glEnable(GL_DEPTH_TEST);
-		
-		System.out.println("OpenGL Version:" + glGetString(GL_VERSION));
-	}
-	
-	public void logic() {
-		glfwPollEvents();
-		
-		
-	}
-	
-	public void draw() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glfwSwapBuffers(window);
-	}
-	
-	@Override
-	public void run() {
-		init();
-		while (running) {
-			logic();
-			draw();
+		while (glfwWindowShouldClose(window) == GL_FALSE) {
+			glfwPollEvents();
+			glClear(GL_COLOR_BUFFER_BIT);
 			
-			if (glfwWindowShouldClose(window) == GL_TRUE) {
-				running = false;
-			}
+			
+			
+			glfwSwapBuffers(window);
 		}
 	}
 
 }
+	

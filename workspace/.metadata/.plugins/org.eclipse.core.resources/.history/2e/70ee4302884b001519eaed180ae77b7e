@@ -1,0 +1,99 @@
+package com.dym99.PlatformerBase;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.nio.ByteBuffer;
+
+import org.lwjgl.opengl.GLContext;
+
+public class Main implements Runnable{
+
+	public static final String GAME_NAME = "2DPLATFORMER";
+
+	private static final long NULL = 0;
+	
+	private Thread thread;
+	
+	private int displayWidth = 1280, displayHeight = 720;
+	
+	private long window;
+	
+	private boolean running;
+	
+	public static void main(String args[]) {
+		Main main = new Main();
+		main.start();
+	}
+	
+	public void start() {
+		running = true;
+		thread = new Thread(this, GAME_NAME);
+		thread.start();
+	}
+	
+	public void init() {
+		if (glfwInit() == GL_FALSE) {
+			System.err.println("ERROR: Unable to initialize GLFW");
+		}
+		
+		window = glfwCreateWindow(displayWidth, displayHeight, GAME_NAME, NULL, NULL);
+		
+		if (window == NULL) {
+			System.err.println("ERROR: Unable to create window.");
+		}
+		
+		
+		ByteBuffer videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		
+		glfwMakeContextCurrent(window);
+		glfwShowWindow(window);
+		
+		GLContext.createFromCurrent();
+		
+		glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
+		glEnable(GL_DEPTH_TEST);
+		
+		System.out.println("OpenGL Version:" + glGetString(GL_VERSION));
+	}
+	
+	public void logic() {
+		glfwPollEvents();
+		
+		
+	}
+	
+	public void draw() {
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glEnable(GL_DEPTH_TEST);
+		glOrtho(0, 1280, 720, 0, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Draw code below //
+		
+		glColor3f(1.0F, 0.0F, 0.0F);
+
+		glVertex3d(0, 0, 0);
+		glVertex3d(32, 0, 0);
+		glVertex3d(32, 32, 0);
+		glVertex3d(0, 32, 0);
+		
+		/////////////////////
+		glfwSwapBuffers(window);
+	}
+	
+	@Override
+	public void run() {
+		init();
+		while (running) {
+			logic();
+			draw();
+			
+			if (glfwWindowShouldClose(window) == GL_TRUE) {
+				running = false;
+			}
+		}
+	}
+
+}
